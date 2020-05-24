@@ -64,16 +64,60 @@ def backtracking(formula, assignment):
     if not formula:
         return assignment
 
-    variable = jeroslow_wang_2_sided(formula)
+    variable = most_occurrences_minimum_size(formula)
+    print(variable)
     solution = backtracking(bcp(formula, variable), assignment + [variable])
     if not solution:
         solution = backtracking(bcp(formula, -variable), assignment + [-variable])
 
     return solution
 
+def most_occurrences(formula):
+    apparences={}
+    for clause in formula:
+        for literal in clause:
+            if literal in apparences:
+                apparences[literal] += 1
+            else:
+                apparences[literal] = 1
+    return max(apparences, key=apparences.get)
+
+def most_occurrences_minimum_size(formula):
+    minimum_size_clauses = min(formula, key = )
+    print(minimum_size_clauses)
+    clausues_with_minimum_size = []
+    for clause in formula:
+        if len(clause) == minimum_size_clauses:
+            clausues_with_minimum_size.append(clause)
+    return most_occurrences(clausues_with_minimum_size)
+
+def most_equilibrated(formula):
+    apparences={}
+    for clause in formula:
+        for literal in clause:
+            if literal in apparences:
+                if literal < 0:
+                    apparences[literal][1] += 1
+                else:
+                    apparences[literal][0] += 1
+            elif -literal in apparences:
+                if -literal < 0:
+                    apparences[-literal][1] += 1
+                else:
+                    apparences[-literal][0] += 1
+            else:
+                if -literal < 0:
+                    apparences[-literal] = [0,1]
+                else:
+                    apparences[-literal] = [1,0]
+    return max(apparences, key = lambda x : apparences[x][0] * apparences[x][1])
+
 def jeroslow_wang_2_sided(formula):
     counter = get_weighted_abs_counter(formula)
     return max(counter, key=counter.get)
+
+def satz(formula):
+    pass
 
 def main():
 
