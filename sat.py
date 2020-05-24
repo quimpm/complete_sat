@@ -156,7 +156,8 @@ class Solver():
 
 	def unit_propagation():
 		for literal in self.cnf.unit_clauses:
-			map(lambda x : self.clauses.remove(x),list(filter( lambda x : literal in x, self.cnf.clauses))) 
+			map(lambda x : self.cnf.clauses.remove(x),list(filter( lambda x : -literal in x, self.cnf.clauses)))
+			map(lambda x : self.cnf.clauses.remove(x),list(filter( lambda x : -literal in x, self.cnf.clauses)))
 
 	def pure_literal_rile():
 		pass
