@@ -57,6 +57,8 @@ class CNF():
 		self.num_vars = None
 		self.num_clauses = None
 		self.clauses = []
+		self.unit_clauses = []
+		self.pure_literals = []
 		self.read_cnf_file(cnf_file_name)
 
 	def read_cnf_file(self, cnf_file_name):
@@ -71,8 +73,21 @@ class CNF():
 				continue
 			if l.strip() == "":
 				continue
-			sl = map(int, l.split())
+			sl = list(map(int, l.split()))
 			sl.pop() # Remove last 0
+			#get all unit causes
+			if len(sl) == 1:
+				if -sl[0] in self.unit_clauses:
+					sys.stdout.write('\ns UNSATISFIABLE\n')
+					sys.exit(0)
+				else:
+					self.unit_clauses.append(sl)
+			for l in sl:
+				if l not in self.pure_literals:
+					if -l in pure_literals:
+						pure_literals.remove(-l)
+					else:
+						pure_literals.append(l)
 			self.clauses.append(sl)
 
 	def show(self):
@@ -136,28 +151,16 @@ class Solver():
 		self.best_cost = cnf.num_clauses + 1
 
 	def solve(self):
-		"""
-		Implements an algorithm to solve the instance of a problem
-		"""
-		#global curr_sol # For signal
-		#signal.alarm(1) # Call receive_alarm in 1 seconds
-		curr_sol = Interpretation(self.cnf.num_vars)
-		var = 1
-		while var > 0:
-			if curr_sol.vars[var] == 1: # Backtrack
-				curr_sol.vars[var] = None
-				var = var - 1
-				continue
-			if curr_sol.vars[var] == None: # Extend left branch
-				curr_sol.vars[var] = 0
-			else: # Extend right branch
-				curr_sol.vars[var] = 1
-			if curr_sol.cost() == 0: # Undet or SAT
-				if var == self.cnf.num_vars: # SAT
-					return curr_sol
-				else: # Undet
-					var = var + 1
-		return curr_sol
+		unit_propagation()
+		pure_literal_rule()
+
+	def unit_propagation():
+		for literal in self.cnf.unit_clauses:
+			map(lambda x : self.clauses.remove(x),list(filter( lambda x : literal in x, self.cnf.clauses))) 
+
+	def pure_literal_rile():
+		pass
+
 
 # Main
 
