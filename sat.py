@@ -1,188 +1,102 @@
-#!/usr/bin/python
-#######################################################################
-# Copyright 2016 Josep Argelich
+#!/usr/bin/env python
+'''
+	SAT solver based on DPLL
+	Course in Advanced Programming in Artificial Intelligence - UdL
+'''
 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#######################################################################
-
-# Libraries
-
-import sys
-import os
 import random
-import signal
-import time
+import sys
 
-# Functions
 
-def receive_alarm(signum, stack):
-	pc = 0
-	pcv = 50.0
-	for v in curr_sol.vars[1:16]:
-		if v == None:
-			break
-		elif v == 1:
-			pc += pcv
-		pcv = pcv / 2
-	sys.stdout.write('\rc Searching %0.2f%%...' % pc)
-	sys.stdout.flush()
-	signal.alarm(3)
+def parse(filename):
+    clauses = []
+    for line in open(filename):
+        if line.startswith('c'):
+            continue
+        if line.startswith('p'):
+            n_vars = line.split()[2]
+            continue
+        clause = [int(x) for x in line[:-2].split()]
+        clauses.append(clause)
+    return clauses, int(n_vars)
 
-signal.signal(signal.SIGALRM, receive_alarm)
 
-# Classes 
+def bcp(formula, unit):
+    modified = []
+    for clause in formula:
+        if unit in clause:
+            continue
+        if -unit in clause:
+            new_clause = [x for x in clause if x != -unit]
+            if not new_clause:
+                return -1
+            modified.append(new_clause)
+        else:
+            modified.append(clause)
+    return modified
 
-class CNF():
-	"""A CNF formula """
 
-	def __init__(self, cnf_file_name):
-		"""
-		Initialization
-		num_vars: Number of variables
-		num_clauses: Number of clauses
-		clause_length: Length of the clauses
-		clauses: List of clauses
-		"""
-		self.num_vars = None
-		self.num_clauses = None
-		self.clauses = []
-		self.unit_clauses = []
-		self.pure_literals = []
-		self.read_cnf_file(cnf_file_name)
+def get_weighted_abs_counter(formula, weight=2):
+    counter = {}
+    for clause in formula:
+        for literal in clause:
+            if abs(literal) in counter:
+                counter[abs(literal)] += weight ** -len(clause)
+            else:
+                counter[abs(literal)] = weight ** -len(clause)
+    return counter
 
-	def read_cnf_file(self, cnf_file_name):
-		instance = open(cnf_file_name, "r")
-		for l in instance:
-			if l[0] == "c":
-				continue
-			if l[0] == "p":
-				sl = l.split()
-				self.num_vars = int(sl[2])
-				self.num_clauses = int(sl[3])
-				continue
-			if l.strip() == "":
-				continue
-			sl = list(map(int, l.split()))
-			sl.pop() # Remove last 0
-			#get all unit causes
-			if len(sl) == 1:
-				if -sl[0] in self.unit_clauses:
-					sys.stdout.write('\ns UNSATISFIABLE\n')
-					sys.exit(0)
-				else:
-					self.unit_clauses.append(sl)
-			for l in sl:
-				if l not in self.pure_literals:
-					if -l in pure_literals:
-						pure_literals.remove(-l)
-					else:
-						pure_literals.append(l)
-			self.clauses.append(sl)
+def unit_propagation(formula):
+    assignment = []
+    unit_clauses = [c for c in formula if len(c) == 1]
+    while unit_clauses:
+        unit = unit_clauses[0]
+        formula = bcp(formula, unit[0])
+        assignment += [unit[0]]
+        if formula == -1:
+            return -1, []
+        if not formula:
+            return formula, assignment
+        unit_clauses = [c for c in formula if len(c) == 1]
+    return formula, assignment
 
-	def show(self):
-		"""Prints the formula to the stdout"""
 
-		sys.stdout.write("c Random CNF formula\n")
-		sys.stdout.write("p cnf %d %d\n" % (self.num_vars, self.num_clauses))
-		for c in self.clauses:
-			sys.stdout.write("%s 0\n" % " ".join(map(str, c)))
+def backtracking(formula, assignment):
 
-class Interpretation():
-	"""An interpretation is an assignment of the possible values to variables"""
+    formula, unit_assignment = unit_propagation(formula)
+    assignment = assignment + unit_assignment
+    if formula == - 1:
+        return []
+    if not formula:
+        return assignment
 
-	def __init__(self, num_vars):
-		"""
-		Initialization
-		TODO
-		"""
-		self.num_vars = num_vars
-		self.vars = [None] * (self.num_vars + 1)
+    variable = jeroslow_wang_2_sided(formula)
+    solution = backtracking(bcp(formula, variable), assignment + [variable])
+    if not solution:
+        solution = backtracking(bcp(formula, -variable), assignment + [-variable])
 
-	def cost(self):
-		cost = 0
-		for c in cnf.clauses:
-			length = len(c)
-			for l in c:
-				if self.vars[abs(l)] == None or (l < 0 and self.vars[abs(l)] == 0) or (l > 0 and self.vars[abs(l)] == 1): # Undef or Satisfies clause
-					break
-				else:
-					length -= 1
-			if length == 0: # Falsified clause
-				cost += 1
-		return cost
+    return solution
 
-	def copy(self):
-		new = Interpretation(self.num_vars)
-		new.vars = list(self.vars)
-		return new
-
-	def show(self):
-		if self.vars[self.num_vars] == None:
-			sys.stdout.write('\ns UNSATISFIABLE\n')
-		else:
-			sys.stdout.write('\ns SATISFIABLE\nv ')
-			for v, s in enumerate(self.vars[1:]):
-				if not s:
-					sys.stdout.write('-')
-				sys.stdout.write('%i ' % (v + 1))
-			sys.stdout.write('0\n')
-
-class Solver():
-	"""The class Solver implements an algorithm to solve a given problem instance"""
-
-	def __init__(self, cnf):
-		"""
-		Initialization
-		TODO
-		"""
-		self.cnf = cnf
-		self.best_sol = None
-		self.best_cost = cnf.num_clauses + 1
-
-	def solve(self):
-		unit_propagation()
-		pure_literal_rule()
-
-	def unit_propagation():
-		for literal in self.cnf.unit_clauses:
-			map(lambda x : self.clauses.remove(x),list(filter( lambda x : literal in x, self.cnf.clauses))) 
-
-	def pure_literal_rile():
-		pass
+def jeroslow_wang_2_sided(formula):
+    counter = get_weighted_abs_counter(formula)
+    return max(counter, key=counter.get)
 
 
 # Main
 
-if __name__ == '__main__' :
-	"""
-	TODO
-	"""
+def main():
 
-	# Check parameters
-	if len(sys.argv) < 1 or len(sys.argv) > 2:
-		sys.exit("Use: %s <cnf_instance>" % sys.argv[0])
-	
-	if os.path.isfile(sys.argv[1]):
-		cnf_file_name = os.path.abspath(sys.argv[1])
-	else:
-		sys.exit("ERROR: CNF instance not found (%s)." % sys.argv[1])
+    clauses, n_vars = parse(sys.argv[1])
 
-	# Read cnf instance
-	cnf = CNF(cnf_file_name)
-	# Create a solver instance with the problem to solve
-	solver = Solver(cnf)
-	# Solve the problem and get the best solution found
-	best_sol = solver.solve()
-	# Show the best solution found
-	best_sol.show()
+    solution = backtracking(clauses, [])
+
+    if solution:
+        solution += [x for x in range(1, n_vars + 1) if x not in solution and -x not in solution]
+        solution.sort(key=abs)
+        print 's SATISFIABLE'
+        print 'v ' + ' '.join([str(x) for x in solution]) + ' 0'
+    else:
+        print 's UNSATISFIABLE'
+
+if __name__ == '__main__':
+    main()
