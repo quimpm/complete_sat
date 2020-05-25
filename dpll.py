@@ -29,17 +29,6 @@ def bcp(formula, unit):
             modified.append(clause)
     return modified
 
-
-def get_weighted_abs_counter(formula, weight=2):
-    counter = {}
-    for clause in formula:
-        for literal in clause:
-            if abs(literal) in counter:
-                counter[abs(literal)] += weight ** -len(clause)
-            else:
-                counter[abs(literal)] = weight ** -len(clause)
-    return counter
-
 def unit_propagation(formula):
     assignment = []
     unit_clauses = [c for c in formula if len(c) == 1]
@@ -64,8 +53,7 @@ def backtracking(formula, assignment):
     if not formula:
         return assignment
 
-    variable = most_occurrences_minimum_size(formula)
-    print(variable)
+    variable = jeroslow_wang(formula)
     solution = backtracking(bcp(formula, variable), assignment + [variable])
     if not solution:
         solution = backtracking(bcp(formula, -variable), assignment + [-variable])
@@ -83,8 +71,7 @@ def most_occurrences(formula):
     return max(apparences, key=apparences.get)
 
 def most_occurrences_minimum_size(formula):
-    minimum_size_clauses = min(formula, key = )
-    print(minimum_size_clauses)
+    minimum_size_clauses = len(min(formula, key = lambda x : len(x)))
     clausues_with_minimum_size = []
     for clause in formula:
         if len(clause) == minimum_size_clauses:
@@ -96,39 +83,38 @@ def most_equilibrated(formula):
     for clause in formula:
         for literal in clause:
             if literal in apparences:
-                if literal < 0:
-                    apparences[literal][1] += 1
-                else:
-                    apparences[literal][0] += 1
+                apparences[literal][0] += 1
             elif -literal in apparences:
-                if -literal < 0:
-                    apparences[-literal][1] += 1
-                else:
-                    apparences[-literal][0] += 1
+                apparences[-literal][1] += 1
             else:
-                if -literal < 0:
-                    apparences[-literal] = [0,1]
-                else:
-                    apparences[-literal] = [1,0]
+                apparences[literal] = [1,0]
     return max(apparences, key = lambda x : apparences[x][0] * apparences[x][1])
 
-def jeroslow_wang_2_sided(formula):
-    counter = get_weighted_abs_counter(formula)
+def jeroslow_wang(formula, weight = 2):
+    counter = {}
+    for clause in formula:
+        for literal in clause:
+            if literal in counter:
+                counter[literal] += weight ** -len(clause)
+            else:
+                counter[literal] = weight ** -len(clause)
     return max(counter, key=counter.get)
 
-def satz(formula):
-    pass
+def jeroslow_wang_2_sided(formula, weight = 2):
+    counter = {}
+    for clause in formula:
+        for literal in clause:
+            if abs(literal) in counter:
+                counter[abs(literal)] += weight ** -len(clause)
+            else:
+                counter[abs(literal)] = weight ** -len(clause)
+    return max(counter, key=counter.get)
 
 def main():
 
     clauses, n_vars = parse(sys.argv[1])
 
-    print(clauses)
-    print(n_vars)
-
     solution = backtracking(clauses, [])
-    
-    print(solution)
 
     if solution:
         solution += [x for x in range(1, n_vars + 1) if x not in solution and -x not in solution]
