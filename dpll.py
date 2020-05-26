@@ -40,6 +40,8 @@ def get_weighted_abs_counter(formula, weight=2):
                 counter[abs(literal)] = weight ** -len(clause)
     return counter
 
+
+
 def unit_propagation(formula):
     assignment = []
     unit_clauses = [c for c in formula if len(c) == 1]
@@ -55,8 +57,9 @@ def unit_propagation(formula):
     return formula, assignment
 
 
-def backtracking(formula, assignment):
 
+
+def backtracking(formula, assignment):
     formula, unit_assignment = unit_propagation(formula)
     assignment = assignment + unit_assignment
     if formula == - 1:
@@ -71,6 +74,9 @@ def backtracking(formula, assignment):
 
     return solution
 
+
+
+
 def jeroslow_wang_2_sided(formula):
     counter = get_weighted_abs_counter(formula)
     return max(counter, key=counter.get)
@@ -79,13 +85,8 @@ def main():
 
     clauses, n_vars = parse(sys.argv[1])
 
-    print(clauses)
-    print(n_vars)
-
     solution = backtracking(clauses, [])
     
-    print(solution)
-
     if solution:
         solution += [x for x in range(1, n_vars + 1) if x not in solution and -x not in solution]
         solution.sort(key=abs)
