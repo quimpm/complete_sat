@@ -60,7 +60,7 @@ def create_graphic(file1, file2, file3, file4, file5, file6, index):
     pl.plot(get_name(jw250), get_comp(jw250, 1), 'o-', label="Using Jeroslow Wang 2")
     pl.plot(get_name(jw2s50), get_comp(jw2s50, 1), 'o-', label="Using Jeroslow Wang 2 Sided")
     pl.legend()
-    pl.savefig(f'50-graphic-{index}.png')
+    pl.savefig('./plots/heuristics.png')
 
 
 if __name__ == '__main__':
