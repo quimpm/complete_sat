@@ -1,6 +1,6 @@
-Tue May 26 18:21:16 2020    output_profiling
+Tue May 26 18:43:27 2020    output_profiling
 
-         1650261 function calls (1649697 primitive calls) in 0.491 seconds
+         24501736 function calls (24486325 primitive calls) in 7.565 seconds
 
    Ordered by: standard name
 
@@ -65,64 +65,64 @@ Tue May 26 18:21:16 2020    output_profiling
         1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:99(_path_isfile)
         1    0.000    0.000    0.000    0.000 <frozen zipimport>:63(__init__)
         1    0.000    0.000    0.000    0.000 _bootlocale.py:1(<module>)
-        5    0.000    0.000    0.000    0.000 _bootlocale.py:33(getpreferredencoding)
-        5    0.000    0.000    0.000    0.000 codecs.py:260(__init__)
-        5    0.000    0.000    0.000    0.000 codecs.py:309(__init__)
-       15    0.000    0.000    0.000    0.000 codecs.py:319(decode)
-        5    0.000    0.000    0.000    0.000 genericpath.py:27(isfile)
-        5    0.005    0.001    0.005    0.001 nou_dpll.py:105(<listcomp>)
-        5    0.000    0.000    0.000    0.000 nou_dpll.py:108(<listcomp>)
-     2933    0.003    0.000    0.003    0.000 nou_dpll.py:12(<listcomp>)
-      568    0.002    0.000    0.142    0.000 nou_dpll.py:20(propagate)
-      568    0.025    0.000    0.037    0.000 nou_dpll.py:22(<listcomp>)
-        1    0.000    0.000    0.491    0.491 nou_dpll.py:3(<module>)
-      728    0.023    0.000    0.035    0.000 nou_dpll.py:31(<listcomp>)
-    568/5    0.003    0.000    0.477    0.095 nou_dpll.py:34(solve_formula)
-        5    0.003    0.001    0.008    0.002 nou_dpll.py:47(parse_cnf)
-     5320    0.003    0.000    0.003    0.000 nou_dpll.py:55(<listcomp>)
-     1292    0.111    0.000    0.140    0.000 nou_dpll.py:7(clean_units)
-      562    0.216    0.000    0.259    0.000 nou_dpll.py:73(jeroslow_wang)
-        1    0.000    0.000    0.491    0.491 nou_dpll.py:97(main_2)
-        1    0.000    0.000    0.000    0.000 nou_dpll.py:99(<listcomp>)
-        5    0.000    0.000    0.000    0.000 posixpath.py:41(_get_sep)
-        5    0.000    0.000    0.000    0.000 posixpath.py:71(join)
-       15    0.000    0.000    0.000    0.000 {built-in method _codecs.utf_8_decode}
+      238    0.001    0.000    0.002    0.000 _bootlocale.py:33(getpreferredencoding)
+      238    0.000    0.000    0.000    0.000 codecs.py:260(__init__)
+      238    0.000    0.000    0.001    0.000 codecs.py:309(__init__)
+      768    0.001    0.000    0.002    0.000 codecs.py:319(decode)
+      238    0.000    0.000    0.001    0.000 genericpath.py:27(isfile)
+        1    0.018    0.018    7.565    7.565 nou_dpll.py:109(main_2)
+        1    0.000    0.000    0.001    0.001 nou_dpll.py:111(<listcomp>)
+      237    0.005    0.000    0.005    0.000 nou_dpll.py:117(<listcomp>)
+   651151    0.230    0.000    0.230    0.000 nou_dpll.py:12(<listcomp>)
+      237    0.002    0.000    0.002    0.000 nou_dpll.py:120(<listcomp>)
+    15648    0.057    0.000    2.599    0.000 nou_dpll.py:20(propagate)
+    15648    0.252    0.000    0.388    0.000 nou_dpll.py:22(<listcomp>)
+        1    0.000    0.000    7.565    7.565 nou_dpll.py:3(<module>)
+    37160    0.364    0.000    0.561    0.000 nou_dpll.py:31(<listcomp>)
+15648/238    0.053    0.000    7.231    0.030 nou_dpll.py:34(solve_formula)
+      238    0.086    0.000    0.302    0.001 nou_dpll.py:47(parse_cnf)
+   134464    0.146    0.000    0.146    0.000 nou_dpll.py:55(<listcomp>)
+    57236    2.130    0.000    2.764    0.000 nou_dpll.py:7(clean_units)
+    10765    2.865    0.000    3.407    0.000 nou_dpll.py:73(jeroslow_wang)
+      238    0.000    0.000    0.000    0.000 posixpath.py:41(_get_sep)
+      238    0.000    0.000    0.000    0.000 posixpath.py:71(join)
+      768    0.001    0.000    0.001    0.000 {built-in method _codecs.utf_8_decode}
         1    0.000    0.000    0.000    0.000 {built-in method _imp._fix_co_filename}
         5    0.000    0.000    0.000    0.000 {built-in method _imp.acquire_lock}
         1    0.000    0.000    0.000    0.000 {built-in method _imp.is_builtin}
         1    0.000    0.000    0.000    0.000 {built-in method _imp.is_frozen}
         5    0.000    0.000    0.000    0.000 {built-in method _imp.release_lock}
-        5    0.000    0.000    0.000    0.000 {built-in method _locale.nl_langinfo}
-        5    0.000    0.000    0.000    0.000 {built-in method _stat.S_ISREG}
+      238    0.001    0.000    0.001    0.000 {built-in method _locale.nl_langinfo}
+      238    0.000    0.000    0.000    0.000 {built-in method _stat.S_ISREG}
         2    0.000    0.000    0.000    0.000 {built-in method _thread.allocate_lock}
         2    0.000    0.000    0.000    0.000 {built-in method _thread.get_ident}
-      2/1    0.000    0.000    0.491    0.491 {built-in method builtins.exec}
+      2/1    0.000    0.000    7.565    7.565 {built-in method builtins.exec}
         6    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
         5    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
-       12    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
-  1154092    0.059    0.000    0.059    0.000 {built-in method builtins.len}
-      562    0.009    0.000    0.009    0.000 {built-in method builtins.max}
-       10    0.000    0.000    0.000    0.000 {built-in method builtins.print}
+      245    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+ 16602626    0.839    0.000    0.839    0.000 {built-in method builtins.len}
+    10765    0.036    0.000    0.036    0.000 {built-in method builtins.max}
+      475    0.005    0.000    0.005    0.000 {built-in method builtins.print}
         3    0.000    0.000    0.000    0.000 {built-in method from_bytes}
         1    0.000    0.000    0.000    0.000 {built-in method io.open_code}
-        5    0.000    0.000    0.001    0.000 {built-in method io.open}
+      238    0.009    0.000    0.012    0.000 {built-in method io.open}
         1    0.000    0.000    0.000    0.000 {built-in method marshal.loads}
-        8    0.000    0.000    0.000    0.000 {built-in method posix.fspath}
+      241    0.000    0.000    0.000    0.000 {built-in method posix.fspath}
         2    0.000    0.000    0.000    0.000 {built-in method posix.listdir}
-       12    0.000    0.000    0.000    0.000 {built-in method posix.stat}
-   477337    0.027    0.000    0.027    0.000 {method 'append' of 'list' objects}
+      245    0.000    0.000    0.000    0.000 {built-in method posix.stat}
+  6808890    0.413    0.000    0.413    0.000 {method 'append' of 'list' objects}
         1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
-        6    0.000    0.000    0.000    0.000 {method 'endswith' of 'str' objects}
+      239    0.000    0.000    0.000    0.000 {method 'endswith' of 'str' objects}
         3    0.000    0.000    0.000    0.000 {method 'extend' of 'list' objects}
         2    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
-       23    0.000    0.000    0.000    0.000 {method 'join' of 'str' objects}
+      255    0.000    0.000    0.000    0.000 {method 'join' of 'str' objects}
         1    0.000    0.000    0.000    0.000 {method 'pop' of 'dict' objects}
         1    0.000    0.000    0.000    0.000 {method 'read' of '_io.BufferedReader' objects}
-        5    0.000    0.000    0.000    0.000 {method 'readlines' of '_io._IOBase' objects}
+      238    0.011    0.000    0.013    0.000 {method 'readlines' of '_io._IOBase' objects}
         9    0.000    0.000    0.000    0.000 {method 'rpartition' of 'str' objects}
        34    0.000    0.000    0.000    0.000 {method 'rstrip' of 'str' objects}
-        5    0.000    0.000    0.000    0.000 {method 'sort' of 'list' objects}
-     5325    0.001    0.000    0.001    0.000 {method 'split' of 'str' objects}
-        8    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
+      237    0.001    0.000    0.001    0.000 {method 'sort' of 'list' objects}
+   134702    0.036    0.000    0.036    0.000 {method 'split' of 'str' objects}
+      241    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
 
 

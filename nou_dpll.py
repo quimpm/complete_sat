@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
 import sys
+from os import listdir
+from os.path import isfile, join
 
-def clean_units(clauses, variable): # Es pot optimitzar
+def clean_units(clauses, variable):
     new_clauses = []
     for clause in clauses:
         if variable not in clause:
@@ -10,7 +12,6 @@ def clean_units(clauses, variable): # Es pot optimitzar
                 new_clause = [x for x in clause if x != -variable]
                 if not new_clause:
                     return -1
-                    # retornar insatisfactible
                 new_clauses.append(new_clause)
             else:
                 new_clauses.append(clause)
@@ -18,13 +19,13 @@ def clean_units(clauses, variable): # Es pot optimitzar
 
 def propagate(clauses):
     interpretation = []
-    units = [c for c in clauses if len(c) == 1]  #1
+    units = [c for c in clauses if len(c) == 1]
     while units:
         first = units[0]
         clauses = clean_units(clauses, first[0])
         interpretation += [first[0]]
         if clauses == -1:
-            return -1, [] # Innecessari
+            return -1, []
         if not clauses:
             return clauses, interpretation
         units =  [c for c in clauses if len(c) == 1]
@@ -34,10 +35,10 @@ def solve_formula(clauses, interpretation):
     clauses, new_interpretation = propagate(clauses)
     interpretation = interpretation + new_interpretation
     if clauses == - 1:
-        return [] # 2
+        return []
     if not clauses:
         return interpretation
-    variable = heuristic(clauses)
+    variable = jeroslow_wang(clauses)
     solution = solve_formula(clean_units(clauses, variable), interpretation + [variable])
     if not solution:
         solution = solve_formula(clean_units(clauses, -variable), interpretation + [-variable])
@@ -47,8 +48,6 @@ def parse_cnf(filename):
     clauses = []
     with open(filename) as f:
         content = f.readlines()
-        #content = [x.strip() for x in content] # Cal?
-
     for line in content:
         if line[0] == 'p':
             num_vars = line.split()[2]
@@ -56,22 +55,17 @@ def parse_cnf(filename):
             clauses.append([int(x) for x in line[:-2].split()])
     return clauses, int(num_vars)
 
-
-def heuristic(clauses):
-    counter = weighted_counter(clauses)
+def jeroslow_wang(formula, weight=2): # debugging
+    counter = {}
+    for clause in formula:
+        for literal in clause:
+            try:
+                counter[literal] += weight ** -len(clause)
+            except KeyError:
+                counter[literal] = weight ** -len(clause)
     return max(counter, key=counter.get)
 
-def weighted_counter(clauses, weight=2):
-    counter =  {}
-    for clause in clauses:
-        for literal in clause:
-            if abs(literal) in counter:
-                counter[abs(literal)] += weight ** -len(clause)
-            else:
-                counter[abs(literal)] = weight ** -len(clause)
-    return counter
-
-def main():
+def main_1():
     clauses, num_vars = parse_cnf(sys.argv[1])
     interpretation = solve_formula(clauses, [])
     
@@ -84,8 +78,24 @@ def main():
         print('s UNSATISFIABLE') #2 s'hauria de treure
 
 
+
+def main_2():
+    folder = sys.argv[1]
+    files = [f for f in listdir(folder) if isfile(join(folder, f))]
+    for cnf in files:
+        clauses, num_vars = parse_cnf(folder + "/" + cnf)
+        interpretation = solve_formula(clauses, [])
+        
+        if interpretation:
+            interpretation += [x for x in range(1, num_vars +1) if x not in interpretation and -x not in interpretation]
+            interpretation.sort(key=abs)
+            print('s SATISFIABLE')
+            print('v '+ ' '.join([str(x) for x in interpretation]) + ' 0')
+        else:
+            print('s UNSATISFIABLE') #2 s'hauria de treure
+
 if __name__ == '__main__':
-    main()
+    main_1()
 
 
 
@@ -98,4 +108,3 @@ if __name__ == '__main__':
 2   retornar directament el UNSATISFIABLE
 
 '''
-
