@@ -31,7 +31,6 @@ def get_diff_files(all_data):
     d50 = list(filter(lambda x: re.search('^exemple-75*',x[0]), all_data))
     return d50
 
-
 def get_name(data):
     return list(map(lambda x: x[0].split('-')[2][:-4], data))
 
