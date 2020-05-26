@@ -53,14 +53,15 @@ def backtracking(formula, assignment):
     if not formula:
         return assignment
 
-    variable = jeroslow_wang(formula)
+    variable = most_occurrences_minimum_size(formula)
     solution = backtracking(bcp(formula, variable), assignment + [variable])
     if not solution:
         solution = backtracking(bcp(formula, -variable), assignment + [-variable])
 
     return solution
 
-def most_occurrences(formula):
+
+def get_literal_aparences(formula):
     apparences={}
     for clause in formula:
         for literal in clause:
@@ -68,15 +69,58 @@ def most_occurrences(formula):
                 apparences[literal] += 1
             else:
                 apparences[literal] = 1
+    return apparences
+
+def most_occurrences(formula):
+    apparences = get_literal_aparences(formula)
     return max(apparences, key=apparences.get)
+
+def get_most_apeared_literals(apparences):
+    most_apeared = []
+    bigest_num_of_apparences = 0
+    for key,value in apparences.items():
+        if value == bigest_num_of_apparences:
+            most_apeared.append(key)
+        if value > bigest_num_of_apparences:
+            most_apeared = []
+            most_apeared.append(key)
+            bigest_num_of_apparences = value
+    if bigest_num_of_apparences == 0:
+        return [random.choice(most_apeared)]
+    else:
+        return most_apeared
+        
+def get_clauses_with_size(formula, size):
+    clausues_with_size = []
+    for clause in formula:
+        if len(clause) == size:
+            clausues_with_size.append(clause)
+    return clausues_with_size
+
+def tiebraker(most_apeared, formula, size):
+    while len(most_apeared) > 1:
+        size += 1
+        clauses_with_size = get_clauses_with_size(formula, size)
+        apparences = get_literal_aparences(clauses_with_size)
+        apparences_in_bigger_clauses={} 
+        for literal in most_apeared:
+            if literal in apparences:
+                apparences_in_bigger_clauses[literal] = apparences[literal]
+            else:
+                apparences_in_bigger_clauses[literal] = 0
+        most_apeared = get_most_apeared_literals(apparences_in_bigger_clauses)
+    return most_apeared[0]
 
 def most_occurrences_minimum_size(formula):
     minimum_size_clauses = len(min(formula, key = lambda x : len(x)))
-    clausues_with_minimum_size = []
-    for clause in formula:
-        if len(clause) == minimum_size_clauses:
-            clausues_with_minimum_size.append(clause)
-    return most_occurrences(clausues_with_minimum_size)
+    clausues_with_minimum_size = get_clauses_with_size(formula, minimum_size_clauses)
+    apparences = get_literal_aparences(clausues_with_minimum_size)
+    most_apeared = get_most_apeared_literals(apparences)
+    if len(most_apeared) > 1:
+        final_literal = tiebraker(most_apeared, formula, minimum_size_clauses)
+    else:
+        final_literal = most_apeared[0]
+    return final_literal
 
 def most_equilibrated(formula):
     apparences={}
