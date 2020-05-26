@@ -29,22 +29,6 @@ def bcp(formula, unit):
             modified.append(clause)
     return modified
 
-<<<<<<< HEAD
-
-def get_weighted_abs_counter(formula, weight=2):
-    counter = {}
-    for clause in formula:
-        for literal in clause:
-            if abs(literal) in counter:
-                counter[abs(literal)] += weight ** -len(clause)
-            else:
-                counter[abs(literal)] = weight ** -len(clause)
-    return counter
-
-
-
-=======
->>>>>>> 169ae0119de615481fc3ddd2c69ef560b4eb4c58
 def unit_propagation(formula):
     assignment = []
     unit_clauses = [c for c in formula if len(c) == 1]
@@ -60,9 +44,8 @@ def unit_propagation(formula):
     return formula, assignment
 
 
-
-
 def backtracking(formula, assignment):
+
     formula, unit_assignment = unit_propagation(formula)
     assignment = assignment + unit_assignment
     if formula == - 1:
@@ -77,13 +60,6 @@ def backtracking(formula, assignment):
 
     return solution
 
-<<<<<<< HEAD
-
-
-
-def jeroslow_wang_2_sided(formula):
-    counter = get_weighted_abs_counter(formula)
-=======
 def most_occurrences(formula):
     apparences={}
     for clause in formula:
@@ -132,7 +108,6 @@ def jeroslow_wang_2_sided(formula, weight = 2):
                 counter[abs(literal)] += weight ** -len(clause)
             else:
                 counter[abs(literal)] = weight ** -len(clause)
->>>>>>> 169ae0119de615481fc3ddd2c69ef560b4eb4c58
     return max(counter, key=counter.get)
 
 def main():
@@ -140,11 +115,7 @@ def main():
     clauses, n_vars = parse(sys.argv[1])
 
     solution = backtracking(clauses, [])
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 169ae0119de615481fc3ddd2c69ef560b4eb4c58
     if solution:
         solution += [x for x in range(1, n_vars + 1) if x not in solution and -x not in solution]
         solution.sort(key=abs)
@@ -155,4 +126,3 @@ def main():
 
 if __name__ == '__main__':
      main()
-
