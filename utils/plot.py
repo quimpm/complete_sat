@@ -10,10 +10,10 @@ def get_file_data(lines):
     for l in lines[1:]:
         l = l[:-1]
         if not l:
-            return name, reduce(lambda x, y: x + y, time) / 25
+            return name, reduce(lambda x, y: x + y, time) / 24
         l = l.replace(',', '.')
         time.append(float(l))
-    return name, reduce(lambda x, y: x + y, time) / 25
+    return name, reduce(lambda x, y: x + y, time) / 24
 
 
 def read_file(file_name):
@@ -28,7 +28,7 @@ def read_file(file_name):
 
 
 def get_diff_files(all_data):
-    d50 = list(filter(lambda x: re.search('^exemple-50*',x[0]), all_data))
+    d50 = list(filter(lambda x: re.search('^exemple-75*',x[0]), all_data))
     return d50
 
 
@@ -52,13 +52,14 @@ def create_graphic(file1, file2, file3, file4, file5, file6, index):
     jw50 = get_diff_files(jw_data)
     jw250 = get_diff_files(jw2_data)
     jw2s50 = get_diff_files(jw2s_data)
+    print(mo50)
     pl.figure(int(index) + 1)
-    pl.plot(get_name(mo50), get_comp(mo50, 1), 'o-', label="Using Most Occurrences")
-    pl.plot(get_name(moms50), get_comp(moms50, 1), 'o-', label="Using Most Occurrences in Minimum Size")
-    pl.plot(get_name(me50), get_comp(me50, 1), 'o-', label="Using Most Equilibrated")
-    pl.plot(get_name(jw50), get_comp(jw50, 1), 'o-', label="Using Jeroslow Wang")
-    pl.plot(get_name(jw250), get_comp(jw250, 1), 'o-', label="Using Jeroslow Wang 2")
-    pl.plot(get_name(jw2s50), get_comp(jw2s50, 1), 'o-', label="Using Jeroslow Wang 2 Sided")
+    pl.plot(get_name(mo50), get_comp(mo50, 1), 'o-', label="Using MO")
+    pl.plot(get_name(moms50), get_comp(moms50, 1), 'o-', label="Using MOMS")
+    pl.plot(get_name(me50), get_comp(me50, 1), 'o-', label="Using ME")
+    pl.plot(get_name(jw50), get_comp(jw50, 1), 'o-', label="Using JW")
+    pl.plot(get_name(jw250), get_comp(jw250, 1), 'o-', label="Using JW2")
+    pl.plot(get_name(jw2s50), get_comp(jw2s50, 1), 'o-', label="Using JW2S")
     pl.legend()
     pl.savefig('./plots/heuristics.png')
 
@@ -70,5 +71,5 @@ if __name__ == '__main__':
     JW = "./times/jeroslow_wang.time"
     JW2 = "./times/jeroslow_wang_2.time"
     JW2S = "./times/jeroslow_wang_2_sided.time"
-    create_graphic(MO, MOMS, ME, JW, JW2, JW2S, "2")
+    create_graphic(MO, MOMS, ME, JW, JW2, JW2S, "1")
 
