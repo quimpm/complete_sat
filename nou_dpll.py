@@ -168,7 +168,7 @@ def main():
     heuristic_6 = jeroslow_wang_2_sided
 
     clauses, num_vars = parse_cnf(sys.argv[1])
-    interpretation = solve_formula(clauses, [], heuristic_6)
+    interpretation = solve_formula(clauses, [], heuristic_5)
     
     if interpretation:
         interpretation += [x for x in range(1, num_vars +1) if x not in interpretation and -x not in interpretation]
