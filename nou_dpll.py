@@ -3,7 +3,7 @@
 import sys
 import random
 
-def clean_units(clauses, variable):
+def clean_units_1(clauses, variable):
     index = []
     deletions = 0
     for i,clause in enumerate(clauses):
@@ -19,7 +19,7 @@ def clean_units(clauses, variable):
         deletions += 1
     return clauses
 
-def clean_units_2(clauses, variable):
+def clean_units(clauses, variable):
     new_clauses = []
     for clause in clauses:
         if variable not in clause:
@@ -184,7 +184,7 @@ def main():
     heuristic_6 = jeroslow_wang_2_sided
 
     clauses, num_vars = parse_cnf(sys.argv[1])
-    interpretation = solve_formula(clauses, [], heuristic_5)
+    interpretation = solve_formula(clauses, [], heuristic_6)
     
     if interpretation:
         interpretation += [x for x in range(1, num_vars +1) if x not in interpretation and -x not in interpretation]
