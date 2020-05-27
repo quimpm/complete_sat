@@ -35,9 +35,9 @@
 %S'han de renombrar totes, inclús date, si un camp es deixa en blanc no apareix
 
 
-\title{Solver Report}
-\author{Aiax Faura Vilalta, Ian Palacín Aliana}
-\date{Divendres 24 d'abril}
+\title{Complete Sat Report}
+\author{Joaquim Pico Mora, Ian Palacín Aliana}
+\date{Divendres 28 Maig}
 \assignatura{Programació avançada en intel·ligència artificial}
 \professorat{Josep Argelich Roma}
 \grup{}
@@ -51,72 +51,39 @@
 
 
 %Fer intro?
-\section{GSAT vs WALKSAT}
-The first step we took in developing the solver was to create the basic structure
-from which all the solvers we have seen were implemented.
-Once we had the basic structure, we implemented a basic GSAT and polished it. Two early mistakes
-that we made were:
-\begin{itemize}
-	\item We assumed that GSAT was faster than WALKSAT, and focussed on it.
-	\item We gave a lot of weight to optimizing flow control and python code in general,
-	giving less importance to the algorithm itself.
-\end{itemize}
-Realizing these two errors we began to investigate more about SAT and the different solvers,
-and the ways in which they worked. There is when we realized that WALKSAT could be much more 
-faster for the random cnfs we were generating, so we implemented it.
-We also implemented tabu search, but led to worse times.  
-Reaffirming the statement above, we read on the internet that WALKSAT used to evaluate fewer
-possibilities and our case was no exception, it went much faster. This is because in our case,
-for the generated formulas, the evaluation time of each flip in GSAT and WalkSat was very similar,
-therefore, as WalkSat needed fewer evaluations was always the winner.
-
-
-%Primer vam provar GSAT
-%Tothom deia que era millor WALKSAT per random cnf formulas
-%Vam provar WALKSAT i va anar la hostia de ràpid
-% Vam fer random walks?
-%Ens feia ordres de magnitud menys iteracions per trobar la solució
-
-\section{Data structures}
-The initial data structure was storing in a list the sequence of clauses as it is. We also tried to 
-do it with dictionaries ant it didn't improve much.
-Once everything worked properly we implemented the data structure mentioned in class, which 
-lowered the timing aggressively.
-
-We also tried different variations of the mentioned structure, like trying to sort the rows by
-number of occurrences throughout the execution, or splitting them into different structures 
-using dictionaries. None of these variations convinced us, they only introduced complexity 
-into the system without really improve the timing, so we didn't leave any.
-%Estructura de dades inicial, anava de cul
-%Més tard la mencionada a classe, anava follada
-
-%També vam provar amb diccionaris
-
-\section{General Observations}
-As we mentioned, we noticed that the most substantial improvements came form variations in the algorithm,
-an important parameter was the flip settings and random probability. Depending on how they were they 
-gave great or terrible results. Tweaking them was the key to came up with a configuration that finally
-gave great outcomes. After seeing the results of the race, we believe that what has truly distanced 
-or solver from the others is not a better implementation of the data structures, nor a better 
-implementation of the algorithm, but a better configuration of flips and randoms.
-
-Another turning point was the broken, which we reached after multiple suitors.
-% Explicar broken aqui?
-
-%Importava molt la configuració de flips i probabilitat de random, així que vam 
-%provar uns quants 
-
-%Ens en vam adonar que el broken era la clau
-
-\section{Profiler}
-To have more knowledge about our solver we used the python profiler cProfile, wich gave us 
-additional information, such as the number of calls, or the time in each function. This 
-way we have been able to see more clearly the bottlenecks of our implementation. For 
-example, at one point of the implementation we made use of the python function \textit{deepcopy}.
-After profiling it became clear to us that it was better to explore a different approach, 
-as it was taking up to 40\% of the total execution time.
-
-
-%Vam utlitzar un profiler per trobar colls d'ampolla
-
+\section{Introduction}
+%Chachareria per omplir.
+\section{Complete Sat}
+%
+\subsection{Skeleton}
+%
+\subsection{Heuristiques}
+%
+\subsubsection{Most Ocurrences}
+%
+\subsubsection{Most Ocurrences in Minimum Size}
+%
+\subsubsection{Most Equilibrated}
+%
+\subsubsection{Jeroslow Wang}
+%
+\subsubsection{Jeroslow Wang Two Sided}
+%
+\subsubsection{Results}
+% Gràfics
+% Comentar resultats
+%
+\section{Python improvements}
+%
+\section{Profiling}
+%
+\section{Conclusion}
+%Basat en DPLL vist a clase.
+%Algoritme Backtraking
+%Explicar mes o menys el que es fa
+\section{Heuristics}
+%Gràfica
+%Observacions Gràfic
+\section{Conclusions}
+%Chachareria per omplir
 \end{document}

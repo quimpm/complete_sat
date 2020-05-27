@@ -5,7 +5,7 @@
 - Intro
 
 - Millores del solver
-    - Comentar esquelet principal
+    - Comentar esquelet principal (DPLL)
     - Heuristiques
         - Most Occurrences
         - Most occurrences minimum size
@@ -14,8 +14,7 @@
         - Jeroslow Wang two sided
     - Gràfiques
 
-- Millores de python
-    
+- Millores de python    
 
 - Profiler
     - Hem utilitzat el profiler cProfile per veure
