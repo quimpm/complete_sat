@@ -4,6 +4,22 @@ import sys
 import random
 
 def clean_units(clauses, variable):
+    index = []
+    deletions = 0
+    for i,clause in enumerate(clauses):
+        if variable in clause:
+            index.append(i)
+        elif -variable in clause:
+            if len(clauses[i]) == 1:
+                return -1
+            clauses[i].remove(-variable)
+
+    for i in index:
+        del clauses[i-deletions]
+        deletions += 1
+    return clauses
+
+def clean_units_2(clauses, variable):
     new_clauses = []
     for clause in clauses:
         if variable not in clause:
