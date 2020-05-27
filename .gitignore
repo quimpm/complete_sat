@@ -8,3 +8,5 @@ out/
 **.synctex.gz
 doc/doc.fdb_latexmk
 doc/doc.fls
+*latexmk
+*fls
