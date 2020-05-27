@@ -76,30 +76,30 @@ not finding it will follow through the other branches.
 \section{Heuristics}
 In this section we're gonna pass trough all the heuristics explaining how had been implemented and also we're going to discuss the results that they have given to us. 
 \subsection{Most Ocurrences}
-Firstly we have the most ocurrences heuristic. As his name says, the literal that we pick to propagate is the one that apears the most in the formula. In orther to get it, we iterate trough the clauses and literals acounting all the ocurrences of each literal and latter geting the one that apers the most.
+Firstly we have the most ocurrences heuristic. As the name says, the literal that we pick to propagate is the one that apears the most in the formula. In order to get it, we iterate through the clauses and literals adding all the ocurrences of each literal and latter geting the one that appears the most.
 \subsection{Most Ocurrences in Minimum Size}
-This heuristic gets the literal that appears the most in a minimum clause size. After unit propagation, the minimum size a clause can have is 2 literals, so most of the time we will start with size 2. Another thing to consider is that if there is a tie between two literals or more, we have to break the tie loking for the apparences of those literals in the clauses with one literal more, and if there is another tie with some of them, we have to look for one more...\\
-In orther to do this, we get the minimum size of the clauses in the formula after the unit propagation and then we get the clauses with that size. After that we count the apparences of the litterals in the clauses get the one the appeared the most. In case of having a tie, we have a function called tiebraker that repeats the same for bigger clauses until it gets the final litteral.
+This heuristic gets the literal that appears the most in a minimum clause size. After unit propagation, the minimum size a clause can have is 2 literals, so most of the time we will start with size 2. Another thing to consider is that if there is a tie between two literals or more, we have to break the tie looking for the appearances of those literals in the clauses with one literal more, and if there is another tie with some of them, we have to look for one more...\\
+In order to do this, we get the minimum size of the clauses in the formula after the unit propagation and then we get the clauses with that size. After that we count the appearances of the litterals in the clauses get the one the appeared the most. In case of having a tie, we have a function called tiebraker that repeats the same for bigger clauses until it gets the final literal.
 \subsection{Most Equilibrated}
-This one takes into acount the aparences of the litteral and the negated litteral, counting the times that apear each one of them. After geting the result, it multiplies the apparences of the litteral and the apparences of the negated literal and gets the one that results with the bigest number. This means that is the most equilibrated and is the one that we have to choose to propagate.\\
-In orther to implement it, we used the same strategy that in the most ocurrences heuristic, but this time  instead of counting each literal separetly we count each symbol geting the times that apear positive and negated.
+This one takes into account the appearances of the literal and the negated literal, counting the times that appear each one of them. After geting the result, it multiplies the appearances of the literal and the appearances of the negated literal and gets the one that results with the biggest number. This means that is the most equilibrated and is the one that we have to chose to propagate.\\
+In order to implement it, we used the same strategy that in the most ocurrences heuristic, but this time  instead of counting each literal separetly we count each symbol getting the times that appear positive and negated.
 \subsection{Jeroslow Wang}
 %
-Jeroslow Wang take into account all the ocurrences of the literals in the formula, making the apparences of literals in small clauses have more importance due to the formula  $\sum 2^{-len(c)}$. We can see that as smaller is the length of the clause better.
-In orther to do it we iterate through the formula and we make the sumatorium of the occurences of all the litterals. The one that results with the bigust value is the one that we pick. 
+Jeroslow Wang take into account all the occurrences of the literals in the formula, making the appearances of literals in small clauses have more importance due to the formula  $\sum 2^{-len(c)}$. We can see that the smaller is the length of the clause, the better.
+In order to do it we iterate through the formula and we make the summation of the occurences of all the literals. The one that results with the bigest value is the one that we pick. 
 \subsection{Jeroslow Wang Two Sided}
 %
-This is a interesting implementation of Jeroslow Wang that we find that takes into the sumatorium of each literal takes into acount the negated literal too. It's implemented the same way as normal Jeroslow Wang, but acounting all the apparences of a symbol.
+This is an interesting implementation of Jeroslow Wang that we find that takes into the summation of each literal takes into acount the negated literal too. It's implemented the same way as normal Jeroslow Wang, but acounting all the apparences of a symbol.
 \subsection{Results}
 % Gràfics% Comentar resultats
-The graphic that we provide next has been made with the results of executing each heuristic with random 3 cnfs formulas of 75 variables and with a variable number of clauses(X axys). Each formula have been executed 25 times per heuristic and we made the mean in orther to get the resulting value of time(Y axys).   
+The graphic that we provide next has been made with the results of executing each heuristic with random 3 cnfs formulas of 75 variables and with a variable number of clauses (X axis). Each formula have been executed 25 times per heuristic and we made the mean in order to get the resulting value of time (Y axis).   
 \begin{figure}[H]
   \includegraphics[width=\linewidth]{../utils/plots/heuristics.png}
   \caption{Heuristics comparation.}
   \label{fig:heu}
 \end{figure}
 In this plot \ref{fig:heu} we can see that the fastest heuristic is the 2 sided Jeroslow Wang. Surprisingly it performs really well, even Jeroslow Wang is not one of the best heuristics as we can see in the plot, it doesn't take care of the same symblol negated literals. Contempling this literals into Jeroslow Wang does not add more complexity in time and as we can see it makes it perform the way better.
-The badest heuristic but not for that much is most occurences, which makes sence but is probably the least informed one. 
+The worst heuristic but not for that much is most occurences, which makes sense but is probably the least informed one. 
 From the rest, we can see that more or less perform the same way but we can highlight that MOMS heuristic seems to perform better with hard formulas and don't have huge peaks at all.
 \section{Python improvements}
 In order to make faster python we followed some guides and tested various things:
@@ -116,7 +116,7 @@ In order to make faster python we followed some guides and tested various things
 %
 \section{Profiling}
 %
-As we wanted to optimize the sat, we profiled it using cProfile in order to know wich of the functions were the ones that the algorithm executes the most and the ones in wich spends most of the time. Doing this has hepled us to optimize and improve the code in those critical points of the agorithm.
+As we wanted to optimize the sat, we profiled it using cProfile in order to know wich of the functions were the ones that the algorithm executes the most and the ones in wich spends most of the time. Doing this has hepled us to optimize and improve the code in the critical points.
 \section{Conclusions}
 During the implementation we came to the conclusion that the best optimizations come from the algorithm
 itself, a good heuristic is the angular stone to cut times. 
