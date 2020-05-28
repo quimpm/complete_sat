@@ -1,24 +1,5 @@
 #!/usr/bin/env python3
 
-import sys
-import random
-
-def clean_units_2(clauses, variable):
-    index = []
-    deletions = 0
-    for i,clause in enumerate(clauses):
-        if variable in clause:
-            index.append(i)
-        elif -variable in clause:
-            if len(clauses[i]) == 1:
-                return -1
-            clauses[i].remove(-variable)
-
-    for i in index:
-        del clauses[i-deletions]
-        deletions += 1
-    return clauses
-
 def clean_units(clauses, variable):
     new_clauses = []
     for clause in clauses:
@@ -46,17 +27,18 @@ def propagate(clauses):
         units =  [c for c in clauses if len(c) == 1]
     return clauses, interpretation
 
-def solve_formula(clauses, interpretation, heuristic):
+def solve_formula(clauses, interpretation):
     clauses, new_interpretation = propagate(clauses)
     interpretation = interpretation + new_interpretation
     if clauses == - 1:
         return []
     if not clauses:
         return interpretation
-    variable = heuristic(clauses)
-    solution = solve_formula(clean_units(clauses[:], variable), interpretation + [variable], heuristic)
-    if not solution:
-        solution = solve_formula(clean_units(clauses[:], -variable), interpretation + [-variable], heuristic)
+    variable = jeroslow_wang_2_sided_2(clauses)
+    solution = solve_formula(clean_units(clauses, variable), interpretation + [variable])
+    if solution:
+        return solution
+    solution = solve_formula(clean_units(clauses, -variable), interpretation + [-variable])
     return solution
 
 def parse_cnf(filename):
@@ -70,8 +52,6 @@ def parse_cnf(filename):
             clauses.append([int(x) for x in line[:-2].split()])
     return clauses, int(num_vars)
 
-
-
 def get_literal_aparences(formula):
     apparences={}
     for clause in formula:
@@ -81,10 +61,6 @@ def get_literal_aparences(formula):
             else:
                 apparences[literal] = 1
     return apparences
-
-def most_occurrences(formula):
-    apparences = get_literal_aparences(formula)
-    return max(apparences, key=apparences.get)
 
 def get_most_apeared_literals(apparences):
     most_apeared = []
@@ -122,7 +98,11 @@ def tiebraker(most_apeared, formula, size):
         most_apeared = get_most_apeared_literals(apparences_in_bigger_clauses)
     return most_apeared[0]
 
-def most_occurrences_minimum_size(formula):
+def most_occurrences(formula): # Heuristic
+    apparences = get_literal_aparences(formula)
+    return max(apparences, key=apparences.get)
+
+def most_occurrences_minimum_size(formula): # Heuristic
     minimum_size_clauses = len(min(formula, key = lambda x : len(x)))
     clausues_with_minimum_size = get_clauses_with_size(formula, minimum_size_clauses)
     apparences = get_literal_aparences(clausues_with_minimum_size)
@@ -133,7 +113,7 @@ def most_occurrences_minimum_size(formula):
         final_literal = most_apeared[0]
     return final_literal
 
-def most_equilibrated(formula):
+def most_equilibrated(formula): # Heuristic
     apparences={}
     for clause in formula:
         for literal in clause:
@@ -145,7 +125,7 @@ def most_equilibrated(formula):
                 apparences[literal] = [1,0]
     return max(apparences, key = lambda x : apparences[x][0] * apparences[x][1])
 
-def jeroslow_wang(formula, weight = 2):
+def jeroslow_wang(formula, weight = 2): # Heuristic
     counter = {}
     for clause in formula:
         for literal in clause:
@@ -155,7 +135,7 @@ def jeroslow_wang(formula, weight = 2):
                 counter[literal] = weight ** -len(clause)
     return max(counter, key=counter.get)
 
-def jeroslow_wang_2(formula, weight = 2):
+def jeroslow_wang_2(formula, weight = 2): # Heuristic
     counter = {}
     for clause in formula:
         for literal in clause:
@@ -165,7 +145,7 @@ def jeroslow_wang_2(formula, weight = 2):
                 counter[literal] = weight ** -len(clause)
     return max(counter, key=counter.get)
 
-def jeroslow_wang_2_sided(formula, weight = 2):
+def jeroslow_wang_2_sided(formula, weight = 2): # Heuristic
     counter = {}
     for clause in formula:
         for literal in clause:
@@ -175,20 +155,23 @@ def jeroslow_wang_2_sided(formula, weight = 2):
                 counter[abs(literal)] = weight ** -len(clause)
     return max(counter, key=counter.get)
 
-def main():
-    heuristic_1 = most_occurrences
-    heuristic_2 = most_occurrences_minimum_size
-    heuristic_3 = most_equilibrated
-    heuristic_4 = jeroslow_wang
-    heuristic_5 = jeroslow_wang_2
-    heuristic_6 = jeroslow_wang_2_sided
+def jeroslow_wang_2_sided_2(formula, weight = 2): # Heuristic
+    counter = {}
+    for clause in formula:
+        for literal in clause:
+            try:
+                counter[abs(literal)] += weight ** -len(clause)
+            except KeyError:
+                counter[abs(literal)] = weight ** -len(clause)
+    return max(counter, key=counter.get)
 
+def main():
+    import sys
     clauses, num_vars = parse_cnf(sys.argv[1])
-    interpretation = solve_formula(clauses, [], heuristic_6)
+    interpretation = solve_formula(clauses, [])
     
     if interpretation:
         interpretation += [x for x in range(1, num_vars +1) if x not in interpretation and -x not in interpretation]
-        interpretation.sort(key=abs)
         print('s SATISFIABLE')
         print('v '+ ' '.join([str(x) for x in interpretation]) + ' 0')
     else:
