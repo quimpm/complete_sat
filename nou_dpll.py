@@ -3,7 +3,7 @@
 import sys
 import random
 
-def clean_units_1(clauses, variable):
+def clean_units_2(clauses, variable):
     index = []
     deletions = 0
     for i,clause in enumerate(clauses):
@@ -54,9 +54,9 @@ def solve_formula(clauses, interpretation, heuristic):
     if not clauses:
         return interpretation
     variable = heuristic(clauses)
-    solution = solve_formula(clean_units(clauses, variable), interpretation + [variable], heuristic)
+    solution = solve_formula(clean_units(clauses[:], variable), interpretation + [variable], heuristic)
     if not solution:
-        solution = solve_formula(clean_units(clauses, -variable), interpretation + [-variable], heuristic)
+        solution = solve_formula(clean_units(clauses[:], -variable), interpretation + [-variable], heuristic)
     return solution
 
 def parse_cnf(filename):
